@@ -102,7 +102,12 @@
         <input type="date" name="endDate" placeholder="End date">
         <input type="submit" value="Add Issuance">
     </form>
+
+    <form action="query/queryGlobal.php" method="post">
+        <h2>Query page</h2>
+        <button>Open</button>
+    </form>
 </body>
 </html>
-<!-- browser-sync start --proxy="localhost:3000" --files="*.php" -->
+<!-- browser-sync start --proxy="localhost:3000" --files="**/*.*" -->
 <!-- $dbcon = new mysqli("127.0.0.1", "root", "1234", "Library", "3306"); -->
