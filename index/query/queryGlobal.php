@@ -2,7 +2,7 @@
 <p>Список книг заданных авторов, упорядоченный по убыванию по авторам или по возрастанию по названиям</p>
 <p>Значения вводить через символ ';'</p>
 <form action="query1.php" method="post">
-    <input type="text" name="authors">
+    <input type="text" name="authors" placeholder="Значения вводить через символ ';'">
     <button>Run</button>
 </form>
 
@@ -74,13 +74,14 @@
             if ($dbcon->connect_error) {
                 die("Connection failed: " . $dbcon->connect_error);
             }
-            $sql = "SELECT client_id, COUNT(*) as total_issues ".
-            "FROM issuanceOfBooks ".
-            "GROUP BY client_id;";
+            $sql = "SELECT c.surname, COUNT(*) as total_issues
+            FROM issuanceOfBooks
+            LEFT JOIN clients c on issuanceofbooks.client_id = c.id
+            GROUP BY client_id;";
             $result = $dbcon->query($sql);
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>".$row['client_id']."</td>";
+                echo "<td>".$row['surname']."</td>";
                 echo "<td>".$row['total_issues']."</td>";
                 echo "</tr>";
             }
@@ -131,14 +132,15 @@
             if ($dbcon->connect_error) {
                 die("Connection failed: " . $dbcon->connect_error);
             }
-            $sql = "SELECT client_id ".
-            "FROM issuanceOfBooks ".
-            "GROUP BY client_id ".
-            "HAVING COUNT(*) > 5;";
+            $sql = "SELECT c.surname
+            FROM issuanceOfBooks
+            LEFT JOIN clients c on c.id = issuanceofbooks.client_id
+            GROUP BY client_id
+            HAVING COUNT(*) > 5;";
             $result = $dbcon->query($sql);
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>".$row['client_id']."</td>";
+                echo "<td>".$row['surname']."</td>";
                 echo "</tr>";
             }
         ?>
@@ -165,6 +167,7 @@
             "FROM clients c ".
             "INNER JOIN issuanceOfBooks i ON c.id = i.client_id ".
             "GROUP BY c.id;";
+
             $result = $dbcon->query($sql);
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
@@ -193,13 +196,14 @@
             if ($dbcon->connect_error) {
                 die("Connection failed: " . $dbcon->connect_error);
             }
-            $sql = "SELECT book_id, COUNT(*) as number_of_issues, AVG(DATEDIFF(endDate, startDate)) as average_duration ".
-            "FROM issuanceOfBooks ".
-            "GROUP BY book_id;";
+            $sql = "SELECT b.name, COUNT(*) as number_of_issues, AVG(DATEDIFF(endDate, startDate)) as average_duration
+            FROM issuanceOfBooks
+            LEFT JOIN books b on b.id = issuanceofbooks.book_id
+            GROUP BY book_id;";
             $result = $dbcon->query($sql);
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>".$row['book_id']."</td>";
+                echo "<td>".$row['name']."</td>";
                 echo "<td>".$row['number_of_issues']."</td>";
                 echo "<td>".$row['average_duration']."</td>";
                 echo "</tr>";
@@ -254,15 +258,16 @@
             if ($dbcon->connect_error) {
                 die("Connection failed: " . $dbcon->connect_error);
             }
-            $sql = "SELECT book_id, COUNT(*) as count_issued ".
-            "FROM issuanceOfBooks ".
-            "WHERE DATEDIFF(endDate, startDate) >= 30 ".
-            "GROUP BY book_id ".
-            "HAVING count_issued > 10;";
+            $sql = "SELECT b.name, COUNT(*) as count_issued
+            FROM issuanceOfBooks
+            LEFT JOIN books b on b.id = issuanceofbooks.book_id
+            WHERE DATEDIFF(endDate, startDate) >= 30
+            GROUP BY book_id
+            HAVING count_issued > 10;";
             $result = $dbcon->query($sql);
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>".$row['book_id']."</td>";
+                echo "<td>".$row['name']."</td>";
                 echo "<td>".$row['count_issued']."</td>";
                 echo "</tr>";
             }

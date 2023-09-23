@@ -72,8 +72,8 @@
         <thead>
             <tr>
                 <th>id</th>
-                <th>book_id</th>
-                <th>client_id</th>
+                <th>book_name</th>
+                <th>client_surname</th>
                 <th>startDate</th>
                 <th>endDate</th>
                 <th>Action</th>
@@ -81,12 +81,15 @@
         </thead>
         <tbody>
             <?php
-                $result = $dbcon->query("SELECT * FROM issuanceofbooks");
+                $result = $dbcon->query("SELECT i.id, b.name, c.surname, i.startDate, i.endDate
+                FROM issuanceofbooks i
+                LEFT JOIN books b on b.id = i.book_id
+                LEFT JOIN clients c on c.id = i.client_id");
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
                     echo "<td>".$row['id']."</td>";
-                    echo "<td>".$row['book_id']."</td>";
-                    echo "<td>".$row['client_id']."</td>";
+                    echo "<td>".$row['name']."</td>";
+                    echo "<td>".$row['surname']."</td>";
                     echo "<td>".$row['startDate']."</td>";
                     echo "<td>".$row['endDate']."</td>";
                     echo "<td><a href='edit/editIssuanceForm.php?id=".$row['id']."'>Edit</a> | <a href='delete/deleteIssuance.php?id=".$row['id']."'>Delete</a></td>";

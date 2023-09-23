@@ -33,6 +33,7 @@ HAVING COUNT(*) > 5;
 SELECT c.id, c.surname, IFNULL(COUNT(i.id), 0) as number_of_issues
 FROM clients c
 INNER JOIN issuanceOfBooks i ON c.id = i.client_id
+WHERE c.id = 1
 GROUP BY c.id;
 
 -- 8
