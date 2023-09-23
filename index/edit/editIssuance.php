@@ -5,7 +5,7 @@
         $client_id = $_POST['client_id'];
         $startDate = $_POST['startDate'];
         $endDate = $_POST['endDate'];
-        
+
         $dbcon = new mysqli("127.0.0.1", "root", "1234", "Library", "3306");
 
         if ($dbcon->connect_error) {
